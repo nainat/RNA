@@ -15,7 +15,7 @@ const Home = () => {
       >
         <div className="absolute top-12 left-12 max-w-3xl text-left">
           <h1 className="text-4xl lg:text-6xl font-bold tracking-tight">
-            RNA Hub
+            RNA HUB
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mt-4">
             A web-based platform that provides AI-driven RNA 3D structure prediction and cancer biomarker detection, offering tools for researchers, doctors, students and biotech professionals.

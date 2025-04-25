@@ -4,15 +4,15 @@ const AboutUs = () => {
   return (
     <div className="space-y-12">
       <section>
-        <h1 className="text-3xl md:text-4xl font-bold mb-6 text-center">About RNA Nexus</h1>
+        <h1 className="text-3xl md:text-4xl font-bold mb-6 text-center">About RNA HUB</h1>
 
         <div className="bg-white dark:bg-zinc-900 rounded-lg shadow p-6 mb-8">
           <h2 className="text-2xl font-bold mb-4">Our Mission</h2>
           <p className="text-lg mb-4">
-            RNA Nexus is dedicated to advancing the field of genomic research through cutting-edge tools and analyses of RNA and DNA structures. We strive to bridge the gap between complex molecular data and practical medical applications.
+          A web-based platform that provides AI-driven RNA 3D structure prediction and cancer biomarker detection, offering tools for researchers, doctors, students and biotech professionals.
           </p>
           <p className="text-lg">
-            Our platform serves as a hub for researchers, healthcare professionals, and academics interested in exploring the intricate world of genomics. By providing accessible tools and comprehensive data resources, we aim to accelerate discoveries in precision medicine and genetic therapies.
+          Our platform serves as a hub where doctors, nurses, researchers and scientists can generate the 3D structure of RNA and detect cancer biomarkers present in the RNA using Deep learning and Machine Learning Models to deepen their understanding of RNA and its structure.
           </p>
         </div>
 
@@ -20,7 +20,7 @@ const AboutUs = () => {
           <div className="bg-white dark:bg-zinc-900 rounded-lg shadow p-6">
             <h2 className="text-2xl font-bold mb-4">Our Vision</h2>
             <p>
-              We envision a world where genomic insights are readily accessible to researchers and clinicians, enabling personalized treatments and revolutionary approaches to human health. RNA Nexus strives to be at the forefront of this genomic revolution, providing the tools and knowledge needed to transform complex data into life-changing applications.
+              We envision a world where genomic insights are readily accessible to researchers and clinicians, enabling personalized treatments and revolutionary approaches to human health. RNA HUB strives to be at the forefront of this genomic revolution, providing the tools and knowledge needed to transform complex data into life-changing applications.
             </p>
           </div>
           <div className="bg-white dark:bg-zinc-900 rounded-lg shadow p-6">
