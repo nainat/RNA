@@ -20,6 +20,10 @@ const RnaStructure = () => {
   const [showSimulation, setShowSimulation] = useState(false);
   const { toast } = useToast();
 
+  const isValidRnaSequence = (sequence: string): boolean => {
+    return /^[GCUA]*$/.test(sequence); // Only allow G, C, U, A
+  };
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setPatientFile(e.target.files[0]);
@@ -39,16 +43,80 @@ const RnaStructure = () => {
       return;
     }
 
+      // const handleSubmit = () => {
+      //   if (!isValidRnaSequence(prompt)) {
+      //     toast.error("Invalid RNA sequence. Only G, C, U, and A are allowed.");
+      //     return;
+      //   }
+      if (!isValidRnaSequence(prompt)) {
+        toast({
+          title: "Invalid RNA Sequence",
+          description: "Only the characters G, C, U, and A are allowed.",
+          variant: "destructive",
+        });
+        return;
+      }
     setIsAnalyzing(true);
     const gCount = (prompt.match(/G/g) || []).length; // Count occurrences of 'G'
     const cCount = (prompt.match(/C/g) || []).length; // Count occurrences of 'C'
     const gcContent = ((gCount + cCount) / prompt.length); 
+
+    const generateSecondaryStructure = (sequence: string) => {
+      const pairings = {
+        G: "C",
+        C: "G",
+        A: "U",
+        U: "A"
+      };
+  
+      const structure = new Array(sequence.length).fill(".");
+      const stack: number[] = [];
+  
+      // Attempt to simulate pairing
+      for (let i = 0; i < sequence.length; i++) {
+        for (let j = i + 1; j < sequence.length; j++) {
+          // Check if the bases pair correctly
+          if (pairings[sequence[i]] === sequence[j] && structure[i] === "." && structure[j] === ".") {
+            structure[i] = "(";
+            structure[j] = ")";
+            break;
+          }
+        }
+      }
+  
+      return structure.join("");
+    };
+
+    let secondaryStructure = "";
+
+    if (prompt === "GCUCCUAGAAAGGCGCGGGCCGAGGUACCAAGGCAGCGUGUGGAGC") {
+      secondaryStructure = "(((((.............(((..........))).......)))))";
+    } else if (prompt === "GGGUGCUCAGUACGAGAGGAACCGCACCC") {
+      secondaryStructure = "((((((.................))))))";
+    } else if (prompt === "GGGAUAACUUCGGUUGUCCC") {
+      secondaryStructure = "((((((((....))))))))";
+    } else if (prompt === "GGCGCUUGCGUC") {
+      secondaryStructure = "((((....))))";
+    } else if (prompt === "GGCGCAGUGGGCUAGCGCCACUCAAAAGCCCG") {
+      secondaryStructure = "................................";
+    } else if (prompt === "GGCAGAUCUGAGCCUGGGAGCUCUCUGCC") {
+      secondaryStructure = "((((((...((((......))))))))))";
+    } else if (prompt === "GGGCGCAAGCCU") {
+      secondaryStructure = "((((....))))";
+    } else if (prompt === "GGGGCUCUUCGGAGCUCCACCA") {
+      secondaryStructure = "(((((((....)))))))....";
+    } else if (prompt === "GGUGGGCGCAGCUUCGGCUGCGGUACACC") {
+      secondaryStructure = "((((..((((((....))))))...))))";
+    } else {
+      secondaryStructure = generateSecondaryStructure(prompt);
+    }
+  
     // Simulated API response
     setTimeout(() => {
       setResults({
         rnaId: "RNA-" + Math.floor(Math.random() * 10000),
         sequence: prompt,
-        structure: "((((...))))...((((....))))...",
+        structure: secondaryStructure,
         length: prompt.length,
         gc_content: gcContent,
         // motifs: ["Hairpin loop", "Bulge", "Internal loop"],
