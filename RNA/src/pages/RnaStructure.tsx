@@ -15,7 +15,7 @@ const RnaStructure = () => {
   const [prompt, setPrompt] = useState("");
   const [patientFile, setPatientFile] = useState<File | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [results, setResults] = useState<null | any>(null);
+  const [results, setResults] = useState<null | any >(null);
   const [showSimulation, setShowSimulation] = useState(false);
   const { toast } = useToast();
 
@@ -131,6 +131,16 @@ const RnaStructure = () => {
         <CardContent>
           <div className="space-y-6">
             <div className="space-y-2">
+              <div className="relative w-full h-[600px] overflow-hidden rounded-md border mt-6">
+              <div className="relative w-full h-[600px] overflow-hidden rounded-md border mt-6">
+  <iframe
+    src="https://rnacomposer.cs.put.poznan.pl/"
+    className="absolute top-[-390px] left-[-320px] w-[140%] h-[1200px] scale-[1.1] origin-top-left bg-black"
+    style={{ border: "none", backgroundColor: "black" }}
+  />
+</div>
+</div>
+
               <Label htmlFor="prompt">Analysis Prompt</Label>
               <Textarea
                 id="prompt"
