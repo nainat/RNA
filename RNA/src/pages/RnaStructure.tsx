@@ -10,6 +10,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { Plus, Search, ArrowRight, Dna, ChartBar } from "lucide-react";
 import RnaVisualizer from "@/components/rna/RnaVisualizer";
 import RnaResults from "@/components/rna/RnaResults";
+import { useEffect } from "react";
 
 const RnaStructure = () => {
   const [prompt, setPrompt] = useState("");
@@ -18,7 +19,8 @@ const RnaStructure = () => {
   const [results, setResults] = useState<null | any >(null);
   const [showSimulation, setShowSimulation] = useState(false);
   const { toast } = useToast();
-
+  
+  
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setPatientFile(e.target.files[0]);
@@ -71,6 +73,7 @@ const RnaStructure = () => {
     setShowSimulation(!showSimulation);
   };
 
+  
   return (
     <div className="space-y-8">
       <div className="text-center">
@@ -131,20 +134,11 @@ const RnaStructure = () => {
         <CardContent>
           <div className="space-y-6">
             <div className="space-y-2">
-              <div className="relative w-full h-[600px] overflow-hidden rounded-md border mt-6">
-              <div className="relative w-full h-[600px] overflow-hidden rounded-md border mt-6">
-  <iframe
-    src="https://rnacomposer.cs.put.poznan.pl/"
-    className="absolute top-[-390px] left-[-320px] w-[140%] h-[1200px] scale-[1.1] origin-top-left bg-black"
-    style={{ border: "none", backgroundColor: "black" }}
-  />
-</div>
-</div>
-
+              
               <Label htmlFor="prompt">Analysis Prompt</Label>
               <Textarea
                 id="prompt"
-                placeholder="Enter your RNA analysis request (e.g., 'Analyze the secondary structure of miRNA-21 and identify potential binding sites')"
+                placeholder="Enter your RNA sequence (e.g., 'GCUCCUAGAAAGGCGCGGGCCGAGGUACCAAGGCAGCGUGUGGAGC')"
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
                 className="min-h-[100px]"
