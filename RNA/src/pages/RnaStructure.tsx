@@ -18,6 +18,7 @@ const RnaStructure = () => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [results, setResults] = useState<null | any>(null);
   const [showSimulation, setShowSimulation] = useState(false);
+  const [activeTab, setActiveTab] = useState("results"); // Add state to control the active tab
   const { toast } = useToast();
 
   const isValidRnaSequence = (sequence: string): boolean => {
@@ -33,6 +34,7 @@ const RnaStructure = () => {
       });
     }
   };
+
   const handleAnalyze = () => {
     if (!prompt.trim()) {
       toast({
@@ -43,19 +45,15 @@ const RnaStructure = () => {
       return;
     }
 
-      // const handleSubmit = () => {
-      //   if (!isValidRnaSequence(prompt)) {
-      //     toast.error("Invalid RNA sequence. Only G, C, U, and A are allowed.");
-      //     return;
-      //   }
-      if (!isValidRnaSequence(prompt)) {
-        toast({
-          title: "Invalid RNA Sequence",
-          description: "Only the characters G, C, U, and A are allowed.",
-          variant: "destructive",
-        });
-        return;
-      }
+    if (!isValidRnaSequence(prompt)) {
+      toast({
+        title: "Invalid RNA Sequence",
+        description: "Only the characters G, C, U, and A are allowed.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsAnalyzing(true);
     const gCount = (prompt.match(/G/g) || []).length; // Count occurrences of 'G'
     const cCount = (prompt.match(/C/g) || []).length; // Count occurrences of 'C'
@@ -119,7 +117,6 @@ const RnaStructure = () => {
         structure: secondaryStructure,
         length: prompt.length,
         gc_content: gcContent,
-        // motifs: ["Hairpin loop", "Bulge", "Internal loop"],
         predictions: {
           stability: "High",  
           function: "Possible regulatory RNA",
@@ -137,6 +134,7 @@ const RnaStructure = () => {
 
   const toggleSimulation = () => {
     setShowSimulation(!showSimulation);
+    setActiveTab("visualization"); // Automatically switch to the visualization tab
   };
 
   return (
@@ -271,7 +269,7 @@ const RnaStructure = () => {
             </AlertDescription>
           </Alert>
 
-          <Tabs defaultValue="results">
+          <Tabs value={activeTab} onValueChange={setActiveTab}>
             <TabsList className="w-full mb-6">
               <TabsTrigger value="results" className="flex-1">
                 Analysis Results
@@ -299,18 +297,8 @@ const RnaStructure = () => {
             </TabsContent>
 
             {showSimulation && (
-              <TabsContent value="visualization" className="mt-0">
-                <Card>
-                  <CardContent className="pt-6">
-                    <div className="text-center mb-4">
-                      <h3 className="text-lg font-medium">RNA 3D Structure Simulation</h3>
-                      <p className="text-sm text-muted-foreground">
-                        Interactive 3D visualization of the predicted RNA structure.
-                      </p>
-                    </div>
-                    <RnaVisualizer />
-                  </CardContent>
-                </Card>
+              <TabsContent value="visualization">
+                <RnaVisualizer sequence={results.sequence} />
               </TabsContent>
             )}
           </Tabs>
