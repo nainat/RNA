@@ -298,7 +298,6 @@
                 </Card>
               </TabsContent>
 
-              // In your RnaStructure component, modify the visualization tab section:
 {showSimulation && (
   <TabsContent value="visualization" className="mt-0">
     <Card> 

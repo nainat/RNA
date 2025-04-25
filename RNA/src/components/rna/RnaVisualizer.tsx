@@ -79,7 +79,7 @@ const RnaVisualizer: React.FC<{ sequence: string }> = ({ sequence }) => {
           marginTop: '2rem',
         }}
       >
-        <h4>Atom Color Key</h4>
+        <h4 style={{color: 'black' }}>Atom Color Key</h4>
         <table style={{ width: '100%' }}>
           <tbody>
             {[
