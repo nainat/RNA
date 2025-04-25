@@ -1,20 +1,27 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-import joblib
-import numpy as np
+import pandas as pd
+import pickle
 
 app = Flask(__name__)
-CORS(app)
+CORS(app)  # Allow CORS
 
-# Load the trained model
-model = joblib.load('cancer_model.pkl')
+# Load the model
+with open("rf_model.pkl", "rb") as file:
+    model = pickle.load(file)
 
-@app.route('/predict', methods=['POST'])
+@app.route("/predict", methods=["POST"])
 def predict():
-    data = request.json
-    features = np.array(data['features']).reshape(1, -1)
-    prediction = model.predict(features)
-    return jsonify({'prediction': int(prediction[0])})
+    if "file" not in request.files:
+        return jsonify({"error": "No file uploaded"}), 400
 
-if __name__ == '__main__':
+    file = request.files["file"]
+    try:
+        df = pd.read_csv(file)
+        predictions = model.predict(df)
+        return jsonify({"predictions": predictions.tolist()})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+if __name__ == "__main__":
     app.run(debug=True)
