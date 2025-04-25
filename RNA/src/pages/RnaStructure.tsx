@@ -10,17 +10,16 @@ import { useToast } from "@/components/ui/use-toast";
 import { Plus, Search, ArrowRight, Dna, ChartBar } from "lucide-react";
 import RnaVisualizer from "@/components/rna/RnaVisualizer";
 import RnaResults from "@/components/rna/RnaResults";
-import { useEffect } from "react";
 
 const RnaStructure = () => {
   const [prompt, setPrompt] = useState("");
+  const [patientName, setPatientName] = useState("");
   const [patientFile, setPatientFile] = useState<File | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [results, setResults] = useState<null | any >(null);
+  const [results, setResults] = useState<null | any>(null);
   const [showSimulation, setShowSimulation] = useState(false);
   const { toast } = useToast();
-  
-  
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setPatientFile(e.target.files[0]);
@@ -30,7 +29,6 @@ const RnaStructure = () => {
       });
     }
   };
-
   const handleAnalyze = () => {
     if (!prompt.trim()) {
       toast({
@@ -42,29 +40,29 @@ const RnaStructure = () => {
     }
 
     setIsAnalyzing(true);
-    
-    // Simulating API call delay
+    const gCount = (prompt.match(/G/g) || []).length; // Count occurrences of 'G'
+    const cCount = (prompt.match(/C/g) || []).length; // Count occurrences of 'C'
+    const gcContent = ((gCount + cCount) / prompt.length); 
+    // Simulated API response
     setTimeout(() => {
       setResults({
         rnaId: "RNA-" + Math.floor(Math.random() * 10000),
-        sequence: "GGGAGAUUUCACCGUUUUCAGUGCAAUGGGAU...",
+        sequence: prompt,
         structure: "((((...))))...((((....))))...",
-        length: 102,
-        gc_content: 0.58,
-        motifs: ["Hairpin loop", "Bulge", "Internal loop"],
+        length: prompt.length,
+        gc_content: gcContent,
+        // motifs: ["Hairpin loop", "Bulge", "Internal loop"],
         predictions: {
-          stability: "High",
+          stability: "High",  
           function: "Possible regulatory RNA",
-          interactions: ["Protein binding sites detected", "Potential ribosome binding"]
+          interactions: [
+            "Protein binding sites detected",
+            "Potential ribosome binding",
+          ],
         },
-        patientData: patientFile ? {
-          age: 45,
-          gender: "Female",
-          condition: "Respiratory condition",
-          genetic_markers: ["BRCA1", "TP53"]
-        } : null
+        patientName: patientName || "N/A",
       });
-      
+
       setIsAnalyzing(false);
     }, 2000);
   };
@@ -73,13 +71,13 @@ const RnaStructure = () => {
     setShowSimulation(!showSimulation);
   };
 
-  
   return (
     <div className="space-y-8">
       <div className="text-center">
         <h1 className="text-3xl md:text-4xl font-bold mb-4">RNA Structure Analysis</h1>
         <p className="text-muted-foreground max-w-2xl mx-auto">
-          Analyze and visualize RNA structures using our advanced algorithms and patient data integration
+          Analyze and visualize RNA structures using our advanced algorithms and
+          patient data integration.
         </p>
       </div>
 
@@ -87,12 +85,12 @@ const RnaStructure = () => {
         <Button
           variant="outline"
           className="w-full flex items-center justify-center gap-2"
-          onClick={() => {
+          onClick={() =>
             toast({
               title: "Generating RNA Structure",
               description: "Processing your request...",
-            });
-          }}
+            })
+          }
         >
           <Dna className="h-4 w-4" />
           Generate RNA Structure
@@ -101,12 +99,12 @@ const RnaStructure = () => {
         <Button
           variant="outline"
           className="w-full flex items-center justify-center gap-2"
-          onClick={() => {
+          onClick={() =>
             toast({
               title: "Cancer Biomark Detection",
               description: "Analyzing biomarkers...",
-            });
-          }}
+            })
+          }
         >
           <Dna className="h-4 w-4" />
           Detect Cancer Biomarks
@@ -115,12 +113,12 @@ const RnaStructure = () => {
         <Button
           variant="outline"
           className="w-full flex items-center justify-center gap-2"
-          onClick={() => {
+          onClick={() =>
             toast({
               title: "Statistics Overview",
               description: "Generating statistics...",
-            });
-          }}
+            })
+          }
         >
           <ChartBar className="h-4 w-4" />
           Overall Statistics
@@ -134,7 +132,17 @@ const RnaStructure = () => {
         <CardContent>
           <div className="space-y-6">
             <div className="space-y-2">
-              
+              <div className="mb-4">
+                <label className="block text-sm font-medium mb-1 text-white">Patient Name</label>
+                <input
+                  type="text"
+                  value={patientName}
+                  onChange={(e) => setPatientName(e.target.value)}
+                  className="w-full bg-black text-white border border-gray-700 rounded px-3 py-2 text-sm placeholder-gray-400"
+                  placeholder="Enter patient name"
+                />
+              </div>
+
               <Label htmlFor="prompt">Analysis Prompt</Label>
               <Textarea
                 id="prompt"
@@ -144,7 +152,7 @@ const RnaStructure = () => {
                 className="min-h-[100px]"
               />
             </div>
-            
+
             <div className="space-y-2">
               <Label htmlFor="patient-data">Patient Data (Optional)</Label>
               <div className="flex items-center gap-4">
@@ -164,11 +172,7 @@ const RnaStructure = () => {
                   </div>
                 </div>
                 {patientFile && (
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    onClick={() => setPatientFile(null)}
-                  >
+                  <Button variant="outline" size="sm" onClick={() => setPatientFile(null)}>
                     Clear
                   </Button>
                 )}
@@ -178,9 +182,9 @@ const RnaStructure = () => {
               </p>
             </div>
 
-            <Button 
-              onClick={handleAnalyze} 
-              disabled={isAnalyzing || !prompt.trim()} 
+            <Button
+              onClick={handleAnalyze}
+              disabled={isAnalyzing || !prompt.trim()}
               className="w-full"
             >
               {isAnalyzing ? "Analyzing..." : "Analyze RNA Structure"}
@@ -201,17 +205,21 @@ const RnaStructure = () => {
 
           <Tabs defaultValue="results">
             <TabsList className="w-full mb-6">
-              <TabsTrigger value="results" className="flex-1">Analysis Results</TabsTrigger>
+              <TabsTrigger value="results" className="flex-1">
+                Analysis Results
+              </TabsTrigger>
               {showSimulation && (
-                <TabsTrigger value="visualization" className="flex-1">3D Visualization</TabsTrigger>
+                <TabsTrigger value="visualization" className="flex-1">
+                  3D Visualization
+                </TabsTrigger>
               )}
             </TabsList>
-            
+
             <TabsContent value="results" className="mt-0">
               <Card>
                 <CardContent className="pt-6">
                   <RnaResults results={results} />
-                  
+
                   <div className="mt-8 flex justify-center">
                     <Button onClick={toggleSimulation} className="flex items-center gap-2">
                       {showSimulation ? "Hide 3D Simulation" : "Show 3D Simulation"}
@@ -221,7 +229,7 @@ const RnaStructure = () => {
                 </CardContent>
               </Card>
             </TabsContent>
-            
+
             {showSimulation && (
               <TabsContent value="visualization" className="mt-0">
                 <Card>
@@ -229,7 +237,7 @@ const RnaStructure = () => {
                     <div className="text-center mb-4">
                       <h3 className="text-lg font-medium">RNA 3D Structure Simulation</h3>
                       <p className="text-sm text-muted-foreground">
-                        Interactive 3D visualization of the predicted RNA structure
+                        Interactive 3D visualization of the predicted RNA structure.
                       </p>
                     </div>
                     <RnaVisualizer />

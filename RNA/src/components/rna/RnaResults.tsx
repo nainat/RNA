@@ -1,133 +1,68 @@
+import React from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+const RnaResults = ({ results }: { results: any }) => {
+  if (!results) return null;
 
-interface RnaResultsProps {
-  results: {
-    rnaId: string;
-    sequence: string;
-    structure: string;
-    length: number;
-    gc_content: number;
-    motifs: string[];
-    predictions: {
-      stability: string;
-      function: string;
-      interactions: string[];
-    };
-    patientData: {
-      age: number;
-      gender: string;
-      condition: string;
-      genetic_markers: string[];
-    } | null;
-  };
-}
-
-const RnaResults = ({ results }: RnaResultsProps) => {
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <h3 className="text-lg font-medium mb-3">Basic Information</h3>
-          <div className="space-y-2">
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">RNA ID:</span>
-              <span className="font-medium">{results.rnaId}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Length:</span>
-              <span className="font-medium">{results.length} nucleotides</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">GC Content:</span>
-              <span className="font-medium">{(results.gc_content * 100).toFixed(1)}%</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-muted-foreground">Stability:</span>
-              <span className="font-medium">{results.predictions.stability}</span>
-            </div>
-          </div>
-        </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>RNA Analysis Summary</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4 text-sm">
+          <p><strong>RNA ID:</strong> {results.rnaId}</p>
+          {results.patientName && (
+            <p><strong>Patient Name:</strong> {results.patientName}</p>
+          )}
+          <p><strong>Sequence:</strong> {results.sequence}</p>
+          <p><strong>Secondary Structure:</strong> {results.structure}</p>
+          <p><strong>Length:</strong> {results.length} bases</p>
+          <p><strong>GC Content:</strong> {(results.gc_content * 100).toFixed(2)}%</p>
 
-        <div>
-          <h3 className="text-lg font-medium mb-3">Structural Motifs</h3>
-          <div className="flex flex-wrap gap-2">
-            {results.motifs.map((motif, index) => (
-              <Badge key={index} variant="outline">
-                {motif}
-              </Badge>
-            ))}
-          </div>
-          <h3 className="text-lg font-medium mt-4 mb-3">Predicted Function</h3>
-          <p>{results.predictions.function}</p>
-        </div>
-      </div>
+          {/* <div>
+            <strong>Motifs:</strong>
+            <ul className="list-disc list-inside ml-4">
+              {results.motifs.map((motif: string, index: number) => (
+                <li key={index}>{motif}</li>
+              ))}
+            </ul>
+          </div> */}
 
-      <Separator />
-
-      <div>
-        <h3 className="text-lg font-medium mb-3">Sequence</h3>
-        <Card>
-          <CardContent className="p-4 font-mono text-xs sm:text-sm overflow-x-auto whitespace-pre">
-            {results.sequence}
-          </CardContent>
-        </Card>
-      </div>
-
-      <div>
-        <h3 className="text-lg font-medium mb-3">Predicted Secondary Structure</h3>
-        <Card>
-          <CardContent className="p-4 font-mono text-xs sm:text-sm overflow-x-auto whitespace-pre">
-            {results.structure}
-          </CardContent>
-        </Card>
-      </div>
-
-      <div>
-        <h3 className="text-lg font-medium mb-3">Predicted Interactions</h3>
-        <ul className="list-disc list-inside space-y-1 pl-4">
-          {results.predictions.interactions.map((interaction, index) => (
-            <li key={index}>{interaction}</li>
-          ))}
-        </ul>
-      </div>
-
-      {results.patientData && (
-        <>
-          <Separator />
           <div>
-            <h3 className="text-lg font-medium mb-3">Patient Data</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Age:</span>
-                  <span>{results.patientData.age}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Gender:</span>
-                  <span>{results.patientData.gender}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Condition:</span>
-                  <span>{results.patientData.condition}</span>
-                </div>
-              </div>
-              <div>
-                <p className="text-muted-foreground mb-2">Genetic Markers:</p>
-                <div className="flex flex-wrap gap-2">
-                  {results.patientData.genetic_markers.map((marker, index) => (
-                    <Badge key={index} variant="secondary">
-                      {marker}
-                    </Badge>
+            <strong>Predictions:</strong>
+            <ul className="list-disc list-inside ml-4">
+              <li><strong>Stability:</strong> {results.predictions.stability}</li>
+              <li><strong>Function:</strong> {results.predictions.function}</li>
+              <li><strong>Interactions:</strong>
+                <ul className="list-disc list-inside ml-4">
+                  {results.predictions.interactions.map((interaction: string, index: number) => (
+                    <li key={index}>{interaction}</li>
                   ))}
-                </div>
-              </div>
-            </div>
+                </ul>
+              </li>
+            </ul>
           </div>
-        </>
-      )}
+
+          {results.patientData && (
+            <div>
+              <strong>Patient Data:</strong>
+              <ul className="list-disc list-inside ml-4">
+                <li><strong>Age:</strong> {results.patientData.age}</li>
+                <li><strong>Gender:</strong> {results.patientData.gender}</li>
+                <li><strong>Condition:</strong> {results.patientData.condition}</li>
+                <li><strong>Genetic Markers:</strong>
+                  <ul className="list-disc list-inside ml-4">
+                    {results.patientData.genetic_markers.map((marker: string, index: number) => (
+                      <li key={index}>{marker}</li>
+                    ))}
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 };
