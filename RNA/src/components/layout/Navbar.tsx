@@ -24,15 +24,15 @@ const Navbar = () => {
     return path !== "/" && location.pathname.startsWith(path);
   };
 
-  return (
-    <nav className="bg-background border-b border-border shadow-sm">
+  return (  
+    <nav className="bg-[#500096] border-b border-border shadow-sm">
       <div className="container mx-auto px-4 py-3 max-w-7xl">
         <div className="flex justify-between items-center">
           <Link to="/" className="flex items-center space-x-2">
             <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center">
-              <span className="text-primary-foreground text-lg font-bold">RB</span>
+              <span className="text-primary-foreground text-lg font-bold">RH</span>
             </div>
-            <span className="font-bold text-xl text-foreground">RNA BRRRR</span>
+            <span className="font-bold text-xl text-white">RNA HUB</span>
           </Link>
           
           <div className="hidden md:flex items-center space-x-1">
@@ -42,8 +42,8 @@ const Navbar = () => {
                 to={link.path}
                 className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                   isActive(link.path)
-                    ? "bg-primary text-primary-foreground"
-                    : "text-foreground hover:bg-secondary"
+                  ? "bg-[#7566d2] text-primary-foreground"
+                  : "text-white hover:bg-[#b8aef6]"
                 }`}
               >
                 {link.name}
@@ -57,9 +57,9 @@ const Navbar = () => {
               className="ml-4"
             >
               {theme === "light" ? (
-                <Moon className="h-5 w-5" />
+                <Moon className="h-5 w-5 text-white" />
               ) : (
-                <Sun className="h-5 w-5" />
+                <Sun className="h-5 w-5 text-white" />
               )}
               <span className="sr-only">Toggle theme</span>
             </Button>
@@ -72,9 +72,9 @@ const Navbar = () => {
               onClick={() => setTheme(theme === "light" ? "dark" : "light")}
             >
               {theme === "light" ? (
-                <Moon className="h-5 w-5" />
+                <Moon className="h-5 w-5 text-white" />
               ) : (
-                <Sun className="h-5 w-5" />
+                <Sun className="h-5 w-5 text-white" />
               )}
             </Button>
             
@@ -97,8 +97,8 @@ const Navbar = () => {
                 to={link.path}
                 className={`block px-3 py-2 rounded-md text-base font-medium ${
                   isActive(link.path)
-                    ? "bg-primary text-primary-foreground"
-                    : "text-foreground hover:bg-secondary"
+                  ? "bg-[#7566d2] text-primary-foreground"
+                  : "text-white hover:bg-[#b8aef6]"
                 }`}
                 onClick={() => setIsMenuOpen(false)}
               >
