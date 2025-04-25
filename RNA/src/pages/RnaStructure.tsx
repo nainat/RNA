@@ -298,15 +298,16 @@
                 </Card>
               </TabsContent>
 
-              {showSimulation && (
-    <TabsContent value="visualization" className="mt-0">
-      <Card> 
+              // In your RnaStructure component, modify the visualization tab section:
+{showSimulation && (
+  <TabsContent value="visualization" className="mt-0">
+    <Card> 
       <CardContent className="pt-6">
-      <RnaVisualizer/> {/* Pass the default pdbFile */}
+        <RnaVisualizer sequence={prompt} />
       </CardContent>
-      </Card>
-    </TabsContent>
-  )}
+    </Card>
+  </TabsContent>
+)}
 
             </Tabs>
           </div>

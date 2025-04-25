@@ -1,3 +1,4 @@
+// components/rna/RnaVisualizer.tsx
 import React, { useEffect, useRef, useState } from 'react';
 
 declare global {
@@ -6,17 +7,29 @@ declare global {
   }
 }
 
-const PDBViewer: React.FC = () => {
+const RnaVisualizer: React.FC<{ sequence: string }> = ({ sequence }) => {
   const viewerRef = useRef<HTMLDivElement>(null);
   const [pdbData, setPdbData] = useState<string | null>(null);
 
-  // Load the PDB file
+  // Load the PDB file based on the sequence
   useEffect(() => {
-    fetch('/GGGAUAACUUCGGUUGUCCC.pdb') // Make sure this file is in the public folder
-      .then((res) => res.text())
+    if (!sequence) return;
+
+    const pdbFileName = `/${sequence}.pdb`; // Assuming PDB files are named after sequences
+    
+    fetch(pdbFileName)
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`PDB file not found for sequence: ${sequence}`);
+        }
+        return res.text();
+      })
       .then((data) => setPdbData(data))
-      .catch((err) => console.error('Failed to load PDB file', err));
-  }, []);
+      .catch((err) => {
+        console.error('Failed to load PDB file', err);
+        // You might want to show a fallback visualization or message here
+      });
+  }, [sequence]);
 
   // Render the viewer when data is ready
   useEffect(() => {
@@ -38,7 +51,7 @@ const PDBViewer: React.FC = () => {
 
   return (
     <div style={{ padding: '20px', maxWidth: '1000px', margin: '0 auto' }}>
-      <h2 style={{ textAlign: 'center' }}>3D Protein Viewer</h2>
+      <h2 style={{ textAlign: 'center' }}>3D RNA Structure Viewer: {sequence}</h2>
 
       <div
         ref={viewerRef}
@@ -48,8 +61,8 @@ const PDBViewer: React.FC = () => {
           margin: '20px auto',
           border: '1px solid #ccc',
           borderRadius: '10px',
-          position: 'relative', // Add this
-          overflow: 'hidden', // Add this
+          position: 'relative',
+          overflow: 'hidden',
         }}
       />
 
@@ -102,4 +115,4 @@ const PDBViewer: React.FC = () => {
   );
 };
 
-export default PDBViewer;
+export default RnaVisualizer;
