@@ -15,7 +15,7 @@ const Navbar = () => {
     { name: "About Us", path: "/about" },
     { name: "Research", path: "/research" },
     { name: "RNA Structure", path: "/rna-structure" },
-    { name: "Predict", path: "/Predict" },
+    // { name: "Predict", path: "/Predict" },
 
   ];
 
