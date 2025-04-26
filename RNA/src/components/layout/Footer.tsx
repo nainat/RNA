@@ -3,14 +3,13 @@ import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
-    <footer className="bg-primary text-primary-foreground">
+    <footer className="bg-gray-900 text-white">
       <div className="container mx-auto px-4 py-8 max-w-7xl">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
-            <h3 className="text-lg font-semibold mb-4">RNA BRRRR</h3>
+            <h3 className="text-lg font-semibold mb-4">RNA HUB</h3>
             <p className="text-sm opacity-80">
-              Pioneering RNA and DNA research for advancing genomic sciences and precision medicine.
-            </p>
+            A web-based platform that provides AI-driven RNA 3D structure prediction and cancer biomarker detection, offering tools for researchers, doctors, students and biotech professionals.            </p>
           </div>
           
           <div>
@@ -26,10 +25,10 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold mb-4">Contact</h3>
             <address className="not-italic text-sm space-y-2">
-              <p>RNA BRRRR Labs</p>
+              <p>RNA Hub</p>
               {/* <p>123 Science Avenue</p>
               <p>Genomic City, GC 12345</p> */}
-              <p className="pt-2">rnabrrr@gmail.com</p>
+              <p className="pt-2">abc@gmail.com</p>
             </address>
           </div>
         </div>
