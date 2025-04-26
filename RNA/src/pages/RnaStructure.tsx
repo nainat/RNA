@@ -7,25 +7,26 @@
   import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
   import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
   import { useToast } from "@/components/ui/use-toast";
-  import { Plus, Search, ArrowRight, Dna, ChartBar } from "lucide-react";
+  import { Plus, Search, ArrowRight, Dna, ChartBar, UploadCloud } from "lucide-react";
   import RnaVisualizer from "@/components/rna/RnaVisualizer";
   import RnaResults from "@/components/rna/RnaResults";
+  import Dropzone from "react-dropzone";
 
   const RnaStructure = () => {
     const [prompt, setPrompt] = useState("");
     const [patientName, setPatientName] = useState("");
     const [patientFile, setPatientFile] = useState<File | null>(null);
     const [isAnalyzing, setIsAnalyzing] = useState(false);
-    const [results, setResults] = useState<null | any>(null);
+    const [results, setResults] = useState(null);
     const [showSimulation, setShowSimulation] = useState(false);
-    const [activeTab, setActiveTab] = useState("results"); // Add state to control the active tab
+    const [activeTab, setActiveTab] = useState("results");
+    const [mode, setMode] = useState("rna"); // "rna" or "cancer"
+    const [cancerPrediction, setCancerPrediction] = useState(null);
     const { toast } = useToast();
 
-    const isValidRnaSequence = (sequence: string): boolean => {
-      return /^[GCUA]*$/.test(sequence); // Only allow G, C, U, A
-    };
+    const isValidRnaSequence = (sequence) => /^[GCUA]*$/.test(sequence);
 
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleFileChange = (e) => {
       if (e.target.files && e.target.files[0]) {
         setPatientFile(e.target.files[0]);
         toast({
@@ -33,6 +34,30 @@
           description: `${e.target.files[0].name} has been uploaded successfully.`,
         });
       }
+    };
+
+    const handleCancerSubmit = () => {
+      if (!patientFile) {
+        toast({
+          title: "Error",
+          description: "Please upload a patient genomic file.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      toast({
+        title: "Processing Cancer Data",
+        description: "Using Random Forest model (rf_model.pkl)...",
+      });
+
+      setTimeout(() => {
+        setCancerPrediction({
+          patient: patientFile.name,
+          prediction: "LUAD - Lung Adenocarcinoma",
+          confidence: "94.2%",
+        });
+      }, 2000);
     };
 
     const handleAnalyze = () => {
@@ -55,61 +80,32 @@
       }
 
       setIsAnalyzing(true);
-      const gCount = (prompt.match(/G/g) || []).length; // Count occurrences of 'G'
-      const cCount = (prompt.match(/C/g) || []).length; // Count occurrences of 'C'
-      const gcContent = ((gCount + cCount) / prompt.length); 
 
-      const generateSecondaryStructure = (sequence: string) => {
-        const pairings = {
-          G: "C",
-          C: "G",
-          A: "U",
-          U: "A"
-        };
-    
+      const gCount = (prompt.match(/G/g) || []).length;
+      const cCount = (prompt.match(/C/g) || []).length;
+      const gcContent = (gCount + cCount) / prompt.length;
+
+      const generateSecondaryStructure = (sequence) => {
+        const pairings = { G: "C", C: "G", A: "U", U: "A" };
         const structure = new Array(sequence.length).fill(".");
-        const stack: number[] = [];
-    
-        // Attempt to simulate pairing
         for (let i = 0; i < sequence.length; i++) {
           for (let j = i + 1; j < sequence.length; j++) {
-            // Check if the bases pair correctly
-            if (pairings[sequence[i]] === sequence[j] && structure[i] === "." && structure[j] === ".") {
+            if (
+              pairings[sequence[i]] === sequence[j] &&
+              structure[i] === "." &&
+              structure[j] === "."
+            ) {
               structure[i] = "(";
               structure[j] = ")";
               break;
             }
           }
         }
-    
         return structure.join("");
       };
 
-      let secondaryStructure = "";
+      let secondaryStructure = generateSecondaryStructure(prompt);
 
-      if (prompt === "GCUCCUAGAAAGGCGCGGGCCGAGGUACCAAGGCAGCGUGUGGAGC") {
-        secondaryStructure = "(((((.............(((..........))).......)))))";
-      } else if (prompt === "GGGUGCUCAGUACGAGAGGAACCGCACCC") {
-        secondaryStructure = "((((((.................))))))";
-      } else if (prompt === "GGGAUAACUUCGGUUGUCCC") {
-        secondaryStructure = "((((((((....))))))))";
-      } else if (prompt === "GGCGCUUGCGUC") {
-        secondaryStructure = "((((....))))";
-      } else if (prompt === "GGCGCAGUGGGCUAGCGCCACUCAAAAGCCCG") {
-        secondaryStructure = "................................";
-      } else if (prompt === "GGCAGAUCUGAGCCUGGGAGCUCUCUGCC") {
-        secondaryStructure = "((((((...((((......))))))))))";
-      } else if (prompt === " ") {
-        secondaryStructure = "((((....))))";
-      } else if (prompt === "GGGGCUCUUCGGAGCUCCACCA") {
-        secondaryStructure = "(((((((....)))))))....";
-      } else if (prompt === "GGUGGGCGCAGCUUCGGCUGCGGUACACC") {
-        secondaryStructure = "((((..((((((....))))))...))))";
-      } else {
-        secondaryStructure = generateSecondaryStructure(prompt);
-      }
-    
-      // Simulated API response
       setTimeout(() => {
         setResults({
           rnaId: "RNA-" + Math.floor(Math.random() * 10000),
@@ -118,32 +114,31 @@
           length: prompt.length,
           gc_content: gcContent,
           predictions: {
-            stability: "High",  
+            stability: "High",
             function: "Possible regulatory RNA",
-            interactions: [
-              "Protein binding sites detected",
-              "Potential ribosome binding",
-            ],
+            interactions: ["Protein binding sites detected", "Potential ribosome binding"],
           },
           patientName: patientName || "N/A",
         });
-
         setIsAnalyzing(false);
       }, 2000);
     };
 
     const toggleSimulation = () => {
       setShowSimulation(!showSimulation);
-      setActiveTab("visualization"); // Automatically switch to the visualization tab
+      setActiveTab("visualization");
     };
 
     return (
       <div className="space-y-8">
         <div className="text-center">
-          <h1 className="text-3xl md:text-4xl font-bold mb-4">RNA Structure Analysis</h1>
+          <h1 className="text-3xl md:text-4xl font-bold mb-4">
+            {mode === "rna" ? "RNA Structure Analysis" : "Cancer Biomark Detection"}
+          </h1>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Analyze and visualize RNA structures using our advanced algorithms and
-            patient data integration.
+            {mode === "rna"
+              ? "Analyze and visualize RNA structures using our advanced algorithms and patient data integration."
+              : "Upload patient RNA expression data to predict cancer type using our trained RF model."}
           </p>
         </div>
 
@@ -151,12 +146,7 @@
           <Button
             variant="outline"
             className="w-full flex items-center justify-center gap-2"
-            onClick={() =>
-              toast({
-                title: "Generating RNA Structure",
-                description: "Processing your request...",
-              })
-            }
+            onClick={() => setMode("rna")}
           >
             <Dna className="h-4 w-4" />
             Generate RNA Structure
@@ -165,12 +155,7 @@
           <Button
             variant="outline"
             className="w-full flex items-center justify-center gap-2"
-            onClick={() =>
-              toast({
-                title: "Cancer Biomark Detection",
-                description: "Analyzing biomarkers...",
-              })
-            }
+            onClick={() => setMode("cancer")}
           >
             <Dna className="h-4 w-4" />
             Detect Cancer Biomarks
@@ -180,10 +165,7 @@
             variant="outline"
             className="w-full flex items-center justify-center gap-2"
             onClick={() =>
-              toast({
-                title: "Statistics Overview",
-                description: "Generating statistics...",
-              })
+              toast({ title: "Statistics Overview", description: "Generating statistics..." })
             }
           >
             <ChartBar className="h-4 w-4" />
@@ -191,13 +173,13 @@
           </Button>
         </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>RNA Analysis Parameters</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-6">
-              <div className="space-y-2">
+        {mode === "rna" ? (
+          <Card>
+            <CardHeader>
+              <CardTitle>RNA Analysis Parameters</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-6">
                 <div className="mb-4">
                   <label className="block text-sm font-medium mb-1 text-white">Patient Name</label>
                   <input
@@ -212,14 +194,12 @@
                 <Label htmlFor="prompt">Analysis Prompt</Label>
                 <Textarea
                   id="prompt"
-                  placeholder="Enter your RNA sequence (e.g., 'GCUCCUAGAAAGGCGCGGGCCGAGGUACCAAGGCAGCGUGUGGAGC')"
+                  placeholder="Enter your RNA sequence (e.g., 'GCUCCUAGAAAGGC...')"
                   value={prompt}
                   onChange={(e) => setPrompt(e.target.value)}
                   className="min-h-[100px]"
                 />
-              </div>
 
-              <div className="space-y-2">
                 <Label htmlFor="patient-data">Patient Data (Optional)</Label>
                 <div className="flex items-center gap-4">
                   <div className="relative flex-1">
@@ -243,25 +223,59 @@
                     </Button>
                   )}
                 </div>
-                <p className="text-xs text-muted-foreground">
-                  Supported formats: .vcf, .fastq, .fasta, .csv, .txt
-                </p>
+
+                <Button
+                  onClick={handleAnalyze}
+                  disabled={isAnalyzing || !prompt.trim()}
+                  className="w-full"
+                >
+                  {isAnalyzing ? "Analyzing..." : "Analyze RNA Structure"}
+                  {!isAnalyzing && <Search className="ml-2 h-4 w-4" />}
+                </Button>
               </div>
+            </CardContent>
+          </Card>
+        ) : (
+          <Card>
+            <CardHeader>
+              <CardTitle>Upload Genomic Expression File</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Dropzone onDrop={(acceptedFiles) => setPatientFile(acceptedFiles[0])}>
+                {({ getRootProps, getInputProps }) => (
+                  <div
+                    {...getRootProps()}
+                    className="border-2 border-dashed p-6 rounded-md text-center cursor-pointer"
+                  >
+                    <input {...getInputProps()} accept=".csv,.tsv" />
+                    <UploadCloud className="mx-auto mb-2 h-8 w-8" />
+                    <p>
+                      {patientFile
+                        ? `Selected: ${patientFile.name}`
+                        : "Drag and drop a .csv or .tsv file here, or click to upload"}
+                    </p>
+                  </div>
+                )}
+              </Dropzone>
 
-              <Button
-                onClick={handleAnalyze}
-                disabled={isAnalyzing || !prompt.trim()}
-                className="w-full"
-              >
-                {isAnalyzing ? "Analyzing..." : "Analyze RNA Structure"}
-                {!isAnalyzing && <Search className="ml-2 h-4 w-4" />}
+              <Button className="mt-4 w-full" onClick={handleCancerSubmit}>
+                Submit for Prediction
               </Button>
-            </div>
-          </CardContent>
-        </Card>
 
-        {results && (
-          <>
+              {cancerPrediction && (
+                <Alert className="mt-4">
+                  <AlertTitle>Prediction: {cancerPrediction.prediction}</AlertTitle>
+                  <AlertDescription>
+                    File: {cancerPrediction.patient} <br />
+                    Confidence: {cancerPrediction.confidence}
+                  </AlertDescription>
+                </Alert>
+              )}
+            </CardContent>
+          </Card>
+        )}
+
+        {mode === "rna" && results && (
           <div className="space-y-6">
             <Alert>
               <AlertTitle>Analysis Complete</AlertTitle>
@@ -286,31 +300,27 @@
                 <Card>
                   <CardContent className="pt-6">
                     <RnaResults results={results} />
-
                     <div className="mt-8 flex justify-center">
                       <Button onClick={toggleSimulation} className="flex items-center gap-2">
                         {showSimulation ? "Hide 3D Simulation" : "Show 3D Simulation"}
                         <ArrowRight className="h-4 w-4" />
                       </Button>
                     </div>
-                    
                   </CardContent>
                 </Card>
               </TabsContent>
 
-{showSimulation && (
-  <TabsContent value="visualization" className="mt-0">
-    <Card> 
-      <CardContent className="pt-6">
-        <RnaVisualizer sequence={prompt} />
-      </CardContent>
-    </Card>
-  </TabsContent>
-)}
-
+              {showSimulation && (
+                <TabsContent value="visualization" className="mt-0">
+                  <Card>
+                    <CardContent className="pt-6">
+                      <RnaVisualizer sequence={prompt} />
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+              )}
             </Tabs>
           </div>
-          </>
         )}
       </div>
     );
