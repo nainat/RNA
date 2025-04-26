@@ -287,12 +287,13 @@ const RnaStructure = () => {
   <h3 className="font-medium mb-3 text-gray-900 dark:text-gray-100">Biomarker Analysis Results</h3>
   <div className="grid grid-cols-5 gap-4 text-sm">
     <div className="bg-white dark:bg-gray-800 p-3 rounded shadow-sm border dark:border-gray-700">
-      <h4 className="font-semibold mb-1 text-gray-900 dark:text-gray-100">COL 1</h4>
-      <p className="text-gray-700 dark:text-gray-300">Biomarker A</p>
-      <p className="text-gray-700 dark:text-gray-300">Score: 0.87</p>
+      <h4 className="font-semibold mb-1 text-gray-900 dark:text-gray-100">BRCA (Breast Cancer):
+      </h4>
+      <p className="text-gray-700 dark:text-gray-300">Breast cancer involves BRCA gene mutations causing DNA repair defects. RNA abnormalities include dysregulated miRNAs (miR-21, miR-155), altered mRNA splicing, and disrupted lncRNAs (HOTAIR) affecting tumor suppression and metastasis pathways</p>
     </div>
     <div className="bg-white dark:bg-gray-800 p-3 rounded shadow-sm border dark:border-gray-700">
-      <h4 className="font-semibold mb-1 text-gray-900 dark:text-gray-100">COL 2</h4>
+      <h4 className="font-semibold mb-1 text-gray-900 dark:text-gray-100">KIRC (Kidney Renal Clear Cell Carcinoma):
+      </h4>
       <p className="text-gray-700 dark:text-gray-300">Biomarker B</p>
       <p className="text-gray-700 dark:text-gray-300">Score: 0.92</p>
     </div>
