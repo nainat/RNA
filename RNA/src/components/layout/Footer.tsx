@@ -28,7 +28,7 @@ const Footer = () => {
               <p>RNA Hub</p>
               {/* <p>123 Science Avenue</p>
               <p>Genomic City, GC 12345</p> */}
-              <p className="pt-2">something@gmail.com</p>
+              <p className="pt-2">idk@gmail.com</p>
             </address>
           </div>
         </div>
