@@ -282,6 +282,38 @@ const RnaStructure = () => {
                 </AlertDescription>
               </Alert>
             )}
+
+<div className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg border dark:border-gray-700">
+  <h3 className="font-medium mb-3 text-gray-900 dark:text-gray-100">Biomarker Analysis Results</h3>
+  <div className="grid grid-cols-5 gap-4 text-sm">
+    <div className="bg-white dark:bg-gray-800 p-3 rounded shadow-sm border dark:border-gray-700">
+      <h4 className="font-semibold mb-1 text-gray-900 dark:text-gray-100">COL 1</h4>
+      <p className="text-gray-700 dark:text-gray-300">Biomarker A</p>
+      <p className="text-gray-700 dark:text-gray-300">Score: 0.87</p>
+    </div>
+    <div className="bg-white dark:bg-gray-800 p-3 rounded shadow-sm border dark:border-gray-700">
+      <h4 className="font-semibold mb-1 text-gray-900 dark:text-gray-100">COL 2</h4>
+      <p className="text-gray-700 dark:text-gray-300">Biomarker B</p>
+      <p className="text-gray-700 dark:text-gray-300">Score: 0.92</p>
+    </div>
+    <div className="bg-white dark:bg-gray-800 p-3 rounded shadow-sm border dark:border-gray-700">
+      <h4 className="font-semibold mb-1 text-gray-900 dark:text-gray-100">COL 3</h4>
+      <p className="text-gray-700 dark:text-gray-300">Biomarker C</p>
+      <p className="text-gray-700 dark:text-gray-300">Score: 0.78</p>
+    </div>
+    <div className="bg-white dark:bg-gray-800 p-3 rounded shadow-sm border dark:border-gray-700">
+      <h4 className="font-semibold mb-1 text-gray-900 dark:text-gray-100">COL 4</h4>
+      <p className="text-gray-700 dark:text-gray-300">Biomarker D</p>
+      <p className="text-gray-700 dark:text-gray-300">Score: 0.85</p>
+    </div>
+    <div className="bg-white dark:bg-gray-800 p-3 rounded shadow-sm border dark:border-gray-700">
+      <h4 className="font-semibold mb-1 text-gray-900 dark:text-gray-100">COL 5</h4>
+      <p className="text-gray-700 dark:text-gray-300">Biomarker E</p>
+      <p className="text-gray-700 dark:text-gray-300">Score: 0.91</p>
+    </div>
+  </div>
+</div>
+
           </CardContent>
         </Card>
       ) : (
