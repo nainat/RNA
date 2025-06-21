@@ -13,7 +13,10 @@ import Research from "./pages/Research";
 import RnaStructure from "./pages/RnaStructure";
 import NotFound from "./pages/NotFound";
 import Predict from "./pages/Predict";
-import AuthPage from "./pages/AuthPage"; // ✅ Auth Page
+import AuthPage from "./pages/AuthPage";
+
+// ✅ ProtectedRoute
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
@@ -26,15 +29,22 @@ const App = () => {
           <Sonner />
           <BrowserRouter>
             <Routes>
-              {/* Auth page without layout */}
+              {/* Public Auth Route */}
               <Route path="/auth" element={<AuthPage />} />
 
-              {/* All routes wrapped with Layout */}
+              {/* All protected routes wrapped with layout */}
               <Route path="/" element={<Layout />}>
                 <Route index element={<Home />} />
                 <Route path="about" element={<AboutUs />} />
                 <Route path="research" element={<Research />} />
-                <Route path="rna-structure" element={<RnaStructure />} />
+                <Route
+                  path="rna-structure"
+                  element={
+                    <ProtectedRoute>
+                      <RnaStructure />
+                    </ProtectedRoute>
+                  }
+                />
                 <Route path="predict" element={<Predict />} />
                 <Route path="*" element={<NotFound />} />
               </Route>
