@@ -6,7 +6,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
-  onAuthStateChanged
+  onAuthStateChanged,
 } from "firebase/auth";
 import {
   getFirestore,
@@ -16,27 +16,27 @@ import {
   updateDoc,
   collection,
   addDoc,
-  deleteDoc
+  deleteDoc,
 } from "firebase/firestore";
 
-// ✅ Firebase project configuration
+// ✅ Your Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyCPgBF7-6eFre4poIR2CjVwp1mn32ItznQ",
   authDomain: "rna-hub.firebaseapp.com",
   projectId: "rna-hub",
   storageBucket: "rna-hub.appspot.com",
   messagingSenderId: "1051758926151",
-  appId: "1:1051758926151:web:8cc9e4380054acdb01d462"
+  appId: "1:1051758926151:web:8cc9e4380054acdb01d462",
 };
 
-// ✅ Initialize Firebase
+// ✅ Initialize Firebase app
 const app = initializeApp(firebaseConfig);
 
-// ✅ Initialize services
+// ✅ Initialize Firebase Auth and Firestore
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// ✅ Export for use throughout the app
+// ✅ Export everything needed across the app
 export {
   auth,
   db,
@@ -50,5 +50,5 @@ export {
   updateDoc,
   collection,
   addDoc,
-  deleteDoc
+  deleteDoc,
 };
